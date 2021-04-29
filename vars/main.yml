@@ -4,6 +4,7 @@ urbanterror_dependencies:
   - unzip
   - libxml2-utils
   - screen
+  - curl
 
 urbanterror_server_config: "{{ urbanterror_install_path }}/q3ut4/server.cfg"
 
