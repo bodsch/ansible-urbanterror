@@ -9,7 +9,8 @@ set -e
     +set fs_basepath {{ urbanterror_directory }} \
     +set fs_homepath {{ urbanterror_directory }} \
     +set dedicated 2 \
-    +set net_port 27960 \
+    +set net_ip {{ urbanterror_bind_ip }} \
+    +set net_port {{ urbanterror_bind_port }} \
     +set com_hunkmegs 128 \
     +exec server.cfg > {{ urbanterror_directory }}/server.out 2>&1
 
