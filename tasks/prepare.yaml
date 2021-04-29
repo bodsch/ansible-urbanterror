@@ -1,0 +1,45 @@
+---
+
+- name: make sure ansible local facts directory exists
+  file:
+    dest: /etc/ansible/facts.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name:
+  package:
+    name: "{{ urbanterror_dependencies }}"
+    state: present
+
+- name: create directory {{ urbanterror_directory }}
+  file:
+    path: "{{ urbanterror_directory }}"
+    state: directory
+    mode: 0750
+
+- name: create updater-cfg
+  template:
+    src: updater-cfg.j2
+    dest: "{{ urbanterror_directory }}/updater-cfg"
+    mode: 0660
+
+- name: copy updater.sh
+  copy:
+    src: updater.sh
+    dest: "{{ urbanterror_directory }}/updater.sh"
+    mode: 0750
+
+# # get file or directory stats
+# - name: detect installed icingaweb2
+#   stat:
+#     path: '/usr/share/icingaweb2-{{ icingaweb_version }}/library/Icinga/Application/Icinga.php'
+#     get_checksum: false
+#     get_md5: false
+#     get_mime: false
+#     get_attributes: false
+#   register: __stat_present_icingaweb2
+#   changed_when: not __stat_present_icingaweb2.stat.exists
+
+...

@@ -1,0 +1,31 @@
+---
+
+- name: run installer
+  command: |
+    {{ urbanterror_directory }}/updater.sh --quiet
+
+- name: install server.sh
+  template:
+    src: server.sh.j2
+    dest: "{{ urbanterror_directory }}/server.sh"
+    mode: 0750
+
+- name: create server config -> {{ urbanterror_directory }}/q3ut4/server.cfg
+  template:
+    src: server.cfg.j2
+    dest: "{{ urbanterror_directory }}/q3ut4/server.cfg"
+    mode: 0660
+
+- name: create mapcycle -> {{ urbanterror_directory }}/q3ut4/mapcycle.txt
+  template:
+    src: mapcycle.txt.j2
+    dest: "{{ urbanterror_directory }}/q3ut4/mapcycle.txt"
+    mode: 0660
+
+- name: create systemd unit file
+  template:
+    src: urbanterror.service.j2
+    dest: /etc/systemd/system/urbanterror.service
+    mode: 0660
+
+...

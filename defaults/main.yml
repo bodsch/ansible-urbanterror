@@ -1,0 +1,32 @@
+---
+
+urbanterror_admin_password: xxx
+
+urbanterror_start_map: ut4_riyadh
+urbanterror_game_type: FreeForAll
+
+# Game types for urban terror
+urbanterror_game_type_map:
+  "FreeForAll": 0
+  LastManStanding: 1
+  TeamDeathMatch: 3
+  TeamSurvivor: 4
+  FollowTheLeader: 5
+  CaptureAndHold: 6
+  CaptureTheFlag: 7
+  BombMode: 8
+  JumpTraining: 9
+  FreezeTag: 10
+  GunGame: 11
+
+urbanterror_binary: Quake3-UrT-Ded.x86_64
+
+# http://cdn.urbanterror.info/urt/43/releases/zips/UrbanTerror434_full.zip
+# http://www.urbanterror.info/downloads/software/urt/43/UrbanTerror43_ded.tar.gz
+
+urbanterror_artifact: https://www.urbanterror.info/downloads/software/urt/43/UrbanTerror43_ded.tar.gz
+# urbanterror_binary: "Quake3-UrT-Ded.{{ ansible_machine }}"
+
+urbanterror_directory: /opt/urbanterror
+...
+

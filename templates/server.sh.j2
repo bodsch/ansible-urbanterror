@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+#while true
+#do
+  {{ urbanterror_directory }}/{{ urbanterror_binary }} \
+    +set fs_game q3ut4 \
+    +set fs_basepath {{ urbanterror_directory }} \
+    +set fs_homepath {{ urbanterror_directory }} \
+    +set dedicated 2 \
+    +set net_port 27960 \
+    +set com_hunkmegs 128 \
+    +exec server.cfg > {{ urbanterror_directory }}/server.out 2>&1
+
+#  echo "server crashed on `date`" > {{ urbanterror_directory }}/last_crash.txt
+# done

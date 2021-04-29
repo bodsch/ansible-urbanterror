@@ -1,0 +1,22 @@
+---
+
+dependencies: []
+
+galaxy_info:
+  author: Bodo Schulz
+  description: urbanterror
+  company: ''
+  license: "GPLv3"
+  min_ansible_version: 2.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 18.04
+        - 20.04
+    - name: Debian
+      versions:
+        - 9
+        - 10
+
+...
+
