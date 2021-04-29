@@ -1,13 +1,13 @@
 ---
 
-urbanterror_admin_password: xxx
+urbanterror_admin_password: s3cr3T-are-p0ssiBL3
 
 urbanterror_start_map: ut4_riyadh
-urbanterror_game_type: FreeForAll
+urbanterror_game_type: CaptureTheFlag
 
 # Game types for urban terror
 urbanterror_game_type_map:
-  "FreeForAll": 0
+  FreeForAll: 0
   LastManStanding: 1
   TeamDeathMatch: 3
   TeamSurvivor: 4
@@ -19,17 +19,12 @@ urbanterror_game_type_map:
   FreezeTag: 10
   GunGame: 11
 
-urbanterror_binary: Quake3-UrT-Ded.x86_64
-
 urbanterror_bind_ip: "{{ ansible_default_ipv4.address }}"
 urbanterror_bind_port: 27960
 
-# http://cdn.urbanterror.info/urt/43/releases/zips/UrbanTerror434_full.zip
-# http://www.urbanterror.info/downloads/software/urt/43/UrbanTerror43_ded.tar.gz
-
 urbanterror_artifact: https://www.urbanterror.info/downloads/software/urt/43/UrbanTerror43_ded.tar.gz
-# urbanterror_binary: "Quake3-UrT-Ded.{{ ansible_machine }}"
+urbanterror_binary: "Quake3-UrT-Ded.{{ ansible_machine }}"
 
 urbanterror_directory: /opt/urbanterror
-...
 
+...

@@ -31,15 +31,4 @@
     dest: "{{ urbanterror_directory }}/updater.sh"
     mode: 0750
 
-# # get file or directory stats
-# - name: detect installed icingaweb2
-#   stat:
-#     path: '/usr/share/icingaweb2-{{ icingaweb_version }}/library/Icinga/Application/Icinga.php'
-#     get_checksum: false
-#     get_md5: false
-#     get_mime: false
-#     get_attributes: false
-#   register: __stat_present_icingaweb2
-#   changed_when: not __stat_present_icingaweb2.stat.exists
-
 ...
