@@ -1,0 +1,9 @@
+---
+
+- name: ensure services are started
+  service:
+    name: urbanterror
+    state: started
+    enabled: true
+
+...
