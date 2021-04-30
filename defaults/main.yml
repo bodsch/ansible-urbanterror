@@ -5,20 +5,6 @@ urbanterror_admin_password: s3cr3T-are-p0ssiBL3
 urbanterror_start_map: ut4_riyadh
 urbanterror_game_type: CaptureTheFlag
 
-# Game types for urban terror
-urbanterror_game_type_map:
-  FreeForAll: 0
-  LastManStanding: 1
-  TeamDeathMatch: 3
-  TeamSurvivor: 4
-  FollowTheLeader: 5
-  CaptureAndHold: 6
-  CaptureTheFlag: 7
-  BombMode: 8
-  JumpTraining: 9
-  FreezeTag: 10
-  GunGame: 11
-
 urbanterror_bind_ip: "{{ ansible_default_ipv4.address }}"
 urbanterror_bind_port: 27960
 
@@ -26,5 +12,19 @@ urbanterror_artifact: https://www.urbanterror.info/downloads/software/urt/43/Urb
 urbanterror_binary: "Quake3-UrT-Ded.{{ ansible_machine }}"
 
 urbanterror_directory: /opt/urbanterror
+
+urbanterror_maps:
+  - ut4_abbey
+  - ut4_mandolin
+  - ut4_uptown
+  - ut4_algiers
+  - ut4_austria
+  - ut4_oildepot
+
+urbanterror_custom_maps:
+  - name: ut_park_avenue_fix
+    src: http://downloads.urban-zone.org/maps/q3ut4/ut_park_avenue_fix.pk3
+  - name: ut_maya_beta3
+    src: http://downloads.urban-zone.org/maps/q3ut4/ut_maya_beta3.pk3
 
 ...

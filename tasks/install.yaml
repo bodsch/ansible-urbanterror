@@ -10,6 +10,18 @@
     dest: "{{ urbanterror_directory }}/server.sh"
     mode: 0750
 
+- name: get custom maps
+  get_url:
+    url: "{{ item.src }}"
+    dest: "{{ urbanterror_directory }}/q3ut4/"
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+  loop: "{{ urbanterror_custom_maps }}"
+  loop_control:
+    label: "{{ item.name }}"
+
 - name: create server config -> {{ urbanterror_directory }}/q3ut4/server.cfg
   template:
     src: server.cfg.j2

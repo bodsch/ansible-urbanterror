@@ -1,7 +1,11 @@
 {{ urbanterror_start_map }}
-ut4_abbey
-ut4_mandolin
-ut4_uptown
-ut4_algiers
-ut4_austria
-ut4_oildepot
+{% if urbanterror_maps is defined %}
+{% for map in urbanterror_maps %}
+{{ map }}
+{% endfor %}
+{% endif %}
+{% if urbanterror_custom_maps is defined %}
+{% for k in urbanterror_custom_maps %}
+{{ k.name }}
+{% endfor %}
+{% endif %}
