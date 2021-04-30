@@ -8,5 +8,23 @@ urbanterror_dependencies:
 
 urbanterror_server_config: "{{ urbanterror_install_path }}/q3ut4/server.cfg"
 
+# Game types for urban terror
+urbanterror_game_type_map:
+  FreeForAll: 0
+  LastManStanding: 1
+  TeamDeathMatch: 3
+  TeamSurvivor: 4
+  FollowTheLeader: 5
+  CaptureAndHold: 6
+  CaptureTheFlag: 7
+  BombMode: 8
+  JumpTraining: 9
+  FreezeTag: 10
+  GunGame: 11
+
+urbanterror_current_version: ''
+urbanterror_download_server: ''
+urbanterror_game_engine: ''
+
 ...
 

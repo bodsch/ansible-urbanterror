@@ -58,7 +58,7 @@ function doManifest ()
       -X POST \
       -H "Content-Type: application/x-www-form-urlencoded;charset=utf-8" \
       -d "platform=${PLATFORM}" \
-      -d "query=$1" \
+      -d "query=${1}" \
       -d "password=${PASSWORD}" \
       -d "version=${CURRENTVERSION}" \
       -d "engine=${GAMEENGINE}" \
