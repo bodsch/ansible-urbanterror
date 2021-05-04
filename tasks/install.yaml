@@ -1,6 +1,6 @@
 ---
 
-- name: run installer
+- name: run installer   # noqa no-changed-when
   command: |
     {{ urbanterror_directory }}/updater.sh --quiet
 

@@ -1,7 +1,10 @@
 ---
 
-- name: update apt cache
-  apt:
+- name: update facts
+  setup:
+
+- name: update package cache
+  package:
     update_cache: true
 
 - name: make sure ansible local facts directory exists
@@ -12,7 +15,7 @@
     group: root
     mode: 0755
 
-- name:
+- name: install dependencies
   package:
     name: "{{ urbanterror_dependencies }}"
     state: present

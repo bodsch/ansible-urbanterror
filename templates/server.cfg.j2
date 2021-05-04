@@ -35,54 +35,98 @@
 //  VISUAL IDENTIFIERS
 //---------------------------------------------------------
 
-set  sv_hostname                       "Tallence Urban Terror Server"   // Your server name here (#NOTE: not all the game browsers display color codes correctly)
-set  sv_joinmessage           "Welcome to Urban Terror 4.3"   // Your join message here. It will displayed when the game is joined
-set  g_motd         "Urban Terror, Presented by FrozenSand"   // Your message of the day here, it is displayed on the loading screen while connecting
+// Your server name here (#NOTE: not all the game browsers display color codes correctly)
+set  sv_hostname                                         "{{ urbanterror_server_title }}"
 
+// Your join message here. It will displayed when the game is joined
+set  sv_joinmessage                                      "{{ urbanterror_server_join_message }}"
+
+// Your message of the day here, it is displayed on the loading screen while connecting
+set  g_motd                                              "{{ urbanterror_server_motd }}"
 
 //---------------------------------------------------------
 //  ADDITIONAL GAME BROWSER INFORMATIONS
 //---------------------------------------------------------
 
-sets " Admin"                                            "bodsch"   // Server administrator aka designated technical contributor
-sets " Clan"                                             "Tallence"   // Your clan name/tag
-sets " Email"                                            "bodo.schulz@tallence.com"   // Email for technical support
-sets " Location"                                         "Hamburg"   // Where your server is located
+// Server administrator aka designated technical contributor
+sets " Admin"                                            "{{ urbanterror_server_admin }}"
+
+// Your clan name/tag
+sets " Clan"                                             "{{ urbanterror_server_clan }}"
+
+// Email for technical support
+sets " Email"                                            "{{ urbanterror_server_email }}"
+
+// Where your server is located
+sets " Location"                                         "{{ urbanterror_server_location }}"
 
 //---------------------------------------------------------
 //  AUTHENTICATION SYSTEM SETTINGS
 //---------------------------------------------------------
 
-set  auth_enable                                        "0"   // Set this to 0 to disable the authentication system (more informations on www urbanterror info)
-set  auth_notoriety                                     "0"   // Minimum notoriety level to be able to connect to your server. 0 allows everyone to join
-set  auth_tags                                          "1"   // Set this to 1 to prevent clan tag thieves from joining your server
-set  auth_cheaters                                      "1"   // Set this to 1 to block the officially banned cheaters from your server [coming soon]
-set  auth_verbosity                                     "1"   // 0 = no authentication message to everyone when a player connects, 1 = message on the top of the screen, 2 = message in the chat box
-set  auth_log                                           "1"   // Set this to 1 to draw the account information in the userinfo of each player in the server logs
-set  auth_groups                                         ""   // Specify group IDs (separated by a blank) if you want to allow only a few groups to connect to the server. Empty ("") means all groups can connect
-seta auth_owners                                         ""   // Specify the group ID of your clan (more informations on www urbanterror info)
+// Set this to 0 to disable the authentication system (more informations on www urbanterror info)
+set  auth_enable                                        "{{ urbanterror_server_auth.enable | default('false') | ternary('1','0') }}"
+
+// Minimum notoriety level to be able to connect to your server. 0 allows everyone to join
+set  auth_notoriety                                     "{{ urbanterror_server_auth.notoriety | default('0') }}"
+
+// Set this to 1 to prevent clan tag thieves from joining your server
+set  auth_tags                                          "{{ urbanterror_server_auth.tags | default('false') | ternary('1','0') }}"
+
+// Set this to 1 to block the officially banned cheaters from your server [coming soon]
+set  auth_cheaters                                      "{{ urbanterror_server_auth.cheaters | default('true') | ternary('1','0') }}"
+
+// 0 = no authentication message to everyone when a player connects, 1 = message on the top of the screen, 2 = message in the chat box
+set  auth_verbosity                                     "{{ urbanterror_server_auth.verbosity | default('1') }}"
+
+// Set this to 1 to draw the account information in the userinfo of each player in the server logs
+set  auth_log                                           "{{ urbanterror_server_auth.log | default('false') | ternary('1','0') }}"
+
+// Specify group IDs (separated by a blank) if you want to allow only a few groups to connect to the server. Empty ("") means all groups can connect
+set  auth_groups                                         ""
+
+// Specify the group ID of your clan (more informations on www urbanterror info)
+seta auth_owners                                         ""
 
 
 //---------------------------------------------------------
 //  MASTER SERVERS SETTINGS
 //---------------------------------------------------------
 
-set  sv_master1                                          ""   // This one will be set automatically by the game-engine, so just leave it blank
-set  sv_master2                   "master.urbanterror.info"   // Default = master.urbanterror.info
-set  sv_master3                  "master2.urbanterror.info"   // Default = master2.urbanterror.info
-set  sv_master4                    "master.quake3arena.com"   // Default = master.quake3arena.com
-set  sv_master5                                          ""   // In the future.....
+// This one will be set automatically by the game-engine, so just leave it blank
+set  sv_master1                                          ""
+
+// Default = master.urbanterror.info
+set  sv_master2                   "master.urbanterror.info"
+
+// Default = master2.urbanterror.info
+set  sv_master3                  "master2.urbanterror.info"
+
+// Default = master.quake3arena.com
+set  sv_master4                    "master.quake3arena.com"
+
+// In the future.....
+set  sv_master5                                          ""
 
 
 //---------------------------------------------------------
 //  SERVER LOGGING SETTINGS
 //---------------------------------------------------------
 
-set  g_log                                      "games.log"   // Server logfile name (Default = "games.log")
-set  g_logsync                                          "1"   // Enables real-time (unbuffered) log writing. Necessarry for 3rd party administration software
-set  g_loghits                                          "0"   // Log every single hit. Creates very big logs. Necessary for proper hit-detection if you use a 3rd party administration software
-set  g_logroll                                          "0"   // If set to 1, creates a new log every now and then: <4 digit number>_<logname>.log -> Leave disabled if using log-parsing additions
-set  logfile                                            "0"   // Additional logging in seperate qconsole.log file. 0 = disabled, 1 = buffered, 2 = synced, 3 = appended
+// Server logfile name (Default = "games.log")
+set  g_log                                      "games.log"
+
+// Enables real-time (unbuffered) log writing. Necessarry for 3rd party administration software
+set  g_logsync                                          "1"
+
+// Log every single hit. Creates very big logs. Necessary for proper hit-detection if you use a 3rd party administration software
+set  g_loghits                                          "0"
+
+// If set to 1, creates a new log every now and then: <4 digit number>_<logname>.log -> Leave disabled if using log-parsing additions
+set  g_logroll                                          "0"
+
+// Additional logging in seperate qconsole.log file. 0 = disabled, 1 = buffered, 2 = synced, 3 = appended
+set  logfile                                            "0"
 
 
 //---------------------------------------------------------

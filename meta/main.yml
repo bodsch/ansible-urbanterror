@@ -3,6 +3,9 @@
 dependencies: []
 
 galaxy_info:
+  role_name: urbanterror
+  namespace: bodsch
+
   author: Bodo Schulz
   description: urbanterror
   company: ''
@@ -19,4 +22,3 @@ galaxy_info:
         - 10
 
 ...
-
