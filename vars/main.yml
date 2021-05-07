@@ -3,8 +3,12 @@
 urbanterror_dependencies:
   - unzip
   - libxml2-utils
+  - jq
   - screen
   - curl
+  - python-urllib3
+  - python-requests
+  - python-xmltodict
 
 urbanterror_server_config: "{{ urbanterror_install_path }}/q3ut4/server.cfg"
 
@@ -21,9 +25,5 @@ urbanterror_game_type_map:
   JumpTraining: 9
   FreezeTag: 10
   GunGame: 11
-
-urbanterror_current_version: ''
-urbanterror_download_server: ''
-urbanterror_game_engine: ''
 
 ...

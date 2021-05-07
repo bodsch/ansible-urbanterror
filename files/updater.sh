@@ -488,4 +488,4 @@ checkGameEngine
 checkVersion
 checkFiles
 downloadFiles
-
+writeSettings

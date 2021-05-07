@@ -11,6 +11,16 @@ urbanterror_bind_port: 27960
 urbanterror_artifact: https://www.urbanterror.info/downloads/software/urt/43/UrbanTerror43_ded.tar.gz
 urbanterror_binary: "Quake3-UrT-Ded.{{ ansible_machine }}"
 
+urbanterror_config:
+  # intition version: 4.0.3
+  current_version: '4.0.3'
+  # id: 2 =
+  download_server: '2'
+  # id: 1 = Quake3-UrT (default)
+  # id: 2 = ioq3-m9 (BETA)
+  game_engine: '1'
+  ask_before_updating: false
+
 urbanterror_directory: /opt/urbanterror
 
 urbanterror_server_title: "UrbanTerror Server"

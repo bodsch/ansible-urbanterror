@@ -1,5 +1,6 @@
 # UrT server updater configuration
-CURRENTVERSION=${CURRENTVERSION:-1}
-DOWNLOADSERVER=${DOWNLOADSERVER:-2}
-GAMEENGINE=${GAMEENGINE:-1}
-ASKBEFOREUPDATING=${ASKBEFOREUPDATING:-1}
+
+CURRENTVERSION={{ urbanterror_config.current_version | default('') }}
+DOWNLOADSERVER={{ urbanterror_config.download_server | default('2') }}
+GAMEENGINE={{ urbanterror_config.game_engine | default('1') }}
+ASKBEFOREUPDATING={{ urbanterror_config.ask_before_updating | ternary('1', '0') }}
