@@ -80,11 +80,38 @@ class UrbanterrorInstaller(object):
             self.download_server = server_list.get('url')
 
             result = self.__parse_files(data)
+            count_full = len(result)
 
-            self.__download(result)
+            file_list = self.__check_data(result)
+            count_download = len(file_list)
+
+            if count_download > 0:
+                state = self.__download(file_list)
+
+                if state:
+                    return dict(
+                        changed=True,
+                        failed=False,
+                        msg="{0} files available, {1} downloaded".format(count_full, count_download)
+                    )
+                else:
+                    return dict(
+                        changed=True,
+                        failed=True,
+                        msg="{0} files should be available, but not all can be downloaded".format(count_full)
+                    )
+
+                file_list = self.__check_data(result)
+            else:
+                return dict(
+                    changed=False,
+                    failed=False,
+                    msg="{0} files up-to-date".format(count_full)
+                )
 
         return dict(
-            failed = True
+            failed = True,
+            msg="no API data available"
         )
 
     def md5(self, fname):
@@ -94,36 +121,47 @@ class UrbanterrorInstaller(object):
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()
 
-    def __download(self, data):
+    def __check_data(self, data):
         """
         """
         need_download = []
 
         for f in data:
             directory = f.get('FileDir')
-            url = f.get('FileUrl')[-1:][0]
+            # url = f.get('FileUrl')[-1:][0]
             file_name = f.get('FileName')
             file_size = f.get('FileSize')
             checksum = f.get('FileMD5')
 
-            self.module.log(
-                msg="  - {} : {} : {}".format(file_name, file_size, checksum)
-            )
+            # self.module.log(
+            #    msg="  - {} : {} : {}".format(file_name, file_size, checksum)
+            # )
 
             dest_file = "{}/{}/{}".format(self.destination, directory, file_name)
 
             _size, _checksum = self.__file_info(dest_file)
 
-            if (not checksum == _checksum) or (not int(_size) == int(file_size)):
-                self.module.log("    missmatch ...")
-                self.module.log("    {} : {}".format(_size, _checksum))
+            if int(_size) == int(file_size) and _checksum == checksum:
+                self.module.log(
+                    msg="  - {0} - file okay".format(dest_file)
+                )
+            else:
+                self.module.log(
+                    msg="  - {0} - missmatch ...".format(dest_file)
+                )
                 need_download.append(f)
 
-        self.module.log(
-            msg="  - {}".format(need_download)
-        )
+        return need_download
 
-        for f in need_download:
+    def __download(self, data):
+        """
+        """
+        self.module.log("download files")
+
+        should_counter = 0
+        is_counter = len(data)
+
+        for f in data:
             directory = f.get('FileDir')
             url = f.get('FileUrl')[-1:][0]
             file_name = f.get('FileName')
@@ -139,10 +177,18 @@ class UrbanterrorInstaller(object):
             with open(dest_file, "wb") as file:
                 response = requests.get("{}/{}".format(self.download_server, url))
                 file.write(response.content)
+                file.close()
 
+            _size, _checksum = self.__file_info(dest_file)
+
+            if int(_size) == int(file_size) and _checksum == checksum:
                 self.module.log(
-                    msg="  -> {}".format(self.__file_info(dest_file))
+                    msg="  -> successful"
                 )
+
+                should_counter = should_counter + 1
+
+        return is_counter == should_counter
 
     def __file_info(self, file_name):
         _size = 0

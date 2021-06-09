@@ -1,8 +1,17 @@
 ---
 
-- name: run installer   # noqa no-changed-when
-  command: |
-    {{ urbanterror_directory }}/updater.sh --quiet
+- name: install urbanterror files
+  urbanterror_installer:
+    url: "http://www.urbanterror.info/api/updaterv4"
+    destination: "{{ urbanterror_directory }}"
+    platform: Linux64
+    updaterVersion: '4.0.3'
+  register: version_info
+
+- name: info
+  debug:
+    msg:
+      - "{{ version_info }}"
 
 - name: install server.sh
   template:
@@ -38,6 +47,6 @@
   template:
     src: urbanterror.service.j2
     dest: /etc/systemd/system/urbanterror.service
-    mode: 0660
+    mode: 0644
 
 ...
