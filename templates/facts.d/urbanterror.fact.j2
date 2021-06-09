@@ -1,8 +1,9 @@
 #!/bin/bash
 cat <<EOF
 {
-  "current_version": "{{ urbanterror_current_version }}",
-  "download_server": "{{ urbanterror_download_server }}",
-  "game_engine": "{{ urbanterror_game_engine }}"
+  "current_version": "{{ urbanterror_config.current_version }}",
+  "download_server": "{{ urbanterror_config.download_server }}",
+  "game_engine": "{{ urbanterror_config.game_engine }}",
+  "ask_before_update": "{{ urbanterror_config.ask_before_updating }}"
 }
 EOF

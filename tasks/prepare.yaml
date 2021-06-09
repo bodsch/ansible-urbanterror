@@ -1,7 +1,10 @@
 ---
 
-- name: update apt cache
-  apt:
+- name: update facts
+  setup:
+
+- name: update package cache
+  package:
     update_cache: true
 
 - name: make sure ansible local facts directory exists
@@ -12,7 +15,7 @@
     group: root
     mode: 0755
 
-- name:
+- name: install dependencies
   package:
     name: "{{ urbanterror_dependencies }}"
     state: present
@@ -35,4 +38,17 @@
     dest: "{{ urbanterror_directory }}/updater.sh"
     mode: 0750
 
+- name: urbanterror api
+  urbanterror_api:
+    url: "http://www.urbanterror.info/api/updaterv4/"
+    get: engine_list
+    platform: Linux64
+    updaterVersion: '4.0.3'
+    # query: 'versionInfo'
+  register: version_info
+
+- name: info
+  debug:
+    msg:
+      - "{{ version_info }}"
 ...

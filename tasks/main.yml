@@ -6,4 +6,3 @@
 - include_tasks: write_facts.yaml
 
 ...
-

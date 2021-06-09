@@ -1,8 +1,17 @@
 ---
 
-- name: run installer
-  command: |
-    {{ urbanterror_directory }}/updater.sh --quiet
+- name: install urbanterror files
+  urbanterror_installer:
+    url: "http://www.urbanterror.info/api/updaterv4"
+    destination: "{{ urbanterror_directory }}"
+    platform: Linux64
+    updaterVersion: '4.0.3'
+  register: version_info
+
+- name: info
+  debug:
+    msg:
+      - "{{ version_info }}"
 
 - name: install server.sh
   template:
@@ -22,13 +31,13 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: create server config -> {{ urbanterror_directory }}/q3ut4/server.cfg
+- name: create server config
   template:
     src: server.cfg.j2
     dest: "{{ urbanterror_directory }}/q3ut4/server.cfg"
     mode: 0660
 
-- name: create mapcycle -> {{ urbanterror_directory }}/q3ut4/mapcycle.txt
+- name: create mapcycle
   template:
     src: mapcycle.txt.j2
     dest: "{{ urbanterror_directory }}/q3ut4/mapcycle.txt"
@@ -38,6 +47,6 @@
   template:
     src: urbanterror.service.j2
     dest: /etc/systemd/system/urbanterror.service
-    mode: 0660
+    mode: 0644
 
 ...
