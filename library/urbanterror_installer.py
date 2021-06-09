@@ -133,11 +133,7 @@ class UrbanterrorInstaller(object):
             file_size = f.get('FileSize')
             checksum = f.get('FileMD5')
 
-            # self.module.log(
-            #    msg="  - {} : {} : {}".format(file_name, file_size, checksum)
-            # )
-
-            dest_file = "{}/{}/{}".format(self.destination, directory, file_name)
+            dest_file = os.path.join(self.destination, directory, file_name)
 
             _size, _checksum = self.__file_info(dest_file)
 
@@ -168,11 +164,17 @@ class UrbanterrorInstaller(object):
             file_size = f.get('FileSize')
             checksum = f.get('FileMD5')
 
-            self.module.log(
-                msg="  - {} : {} : {}".format(file_name, file_size, checksum)
-            )
+            # self.module.log(
+            #     msg="  - {} : {} : {}".format(file_name, file_size, checksum)
+            # )
 
-            dest_file = "{}/{}/{}".format(self.destination, directory, file_name)
+            try:
+                # Create target Directory
+                os.mkdir(os.path.join(self.destination, directory))
+            except FileExistsError:
+                pass
+
+            dest_file = os.path.join(self.destination, directory, file_name)
 
             with open(dest_file, "wb") as file:
                 response = requests.get("{}/{}".format(self.download_server, url))
