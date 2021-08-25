@@ -1,4 +1,7 @@
 
+# Ansible Role:  `urbanterror`
+
+
 installs and configure an [Urbanterror](https://www.urbanterror.info/home) server.
 
 
@@ -21,7 +24,7 @@ Tested on
 
 ### default configration
 
-```
+```yaml
 urbanterror_admin_password: s3cr3T-are-p0ssiBL3
 
 urbanterror_start_map: ut4_riyadh
@@ -99,7 +102,6 @@ urbanterror_custom_maps:
 - `FreezeTag`
 - `GunGame`
 
-```
+```yaml
 urbanterror_game_type: CaptureTheFlag
-
 ```
