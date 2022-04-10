@@ -17,8 +17,9 @@ installs and configure an [Urbanterror](https://www.urbanterror.info/home) serve
 
 Tested on
 
-* Debian 9 / 10
-* Ubuntu 18.04 / 20.04
+* Debian based
+    - Debian 10 / 11
+    - Ubuntu 20.04
 
 ## usage
 
