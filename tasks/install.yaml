@@ -5,13 +5,23 @@
     url: "http://www.urbanterror.info/api/updaterv4"
     destination: "{{ urbanterror_directory }}"
     platform: Linux64
-    updaterVersion: '4.0.3'
+    updaterVersion: "{{ urbanterror_version }}"
   register: version_info
+  notify:
+    - restart urbanterror
 
 - name: info
   debug:
     msg:
       - "{{ version_info }}"
+
+- name: make sure that the engine is executable
+  file:
+    path: "{{ urbanterror_directory }}/{{ item }}"
+    mode: 0750
+  loop:
+    - Quake3-UrT-Ded.x86_64
+    - Quake3-UrT.x86_64
 
 - name: install server.sh
   template:
@@ -23,6 +33,7 @@
   get_url:
     url: "{{ item.src }}"
     dest: "{{ urbanterror_directory }}/q3ut4/"
+    mode: 0640
   register: _download_archive
   until: _download_archive is succeeded
   retries: 5
@@ -31,22 +42,12 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: create server config
-  template:
-    src: server.cfg.j2
-    dest: "{{ urbanterror_directory }}/q3ut4/server.cfg"
-    mode: 0660
-
-- name: create mapcycle
-  template:
-    src: mapcycle.txt.j2
-    dest: "{{ urbanterror_directory }}/q3ut4/mapcycle.txt"
-    mode: 0660
-
 - name: create systemd unit file
   template:
     src: urbanterror.service.j2
     dest: /etc/systemd/system/urbanterror.service
     mode: 0644
+  notify:
+    - reload systemd
 
 ...

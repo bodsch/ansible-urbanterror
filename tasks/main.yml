@@ -1,8 +1,18 @@
 ---
 
-- include_tasks: prepare.yaml
-- include_tasks: install.yaml
-- include_tasks: service.yaml
-- include_tasks: write_facts.yaml
+- name: prepare
+  include_tasks: prepare.yaml
+
+- name: install
+  include_tasks: install.yaml
+
+- name: configure
+  include_tasks: configure.yaml
+
+- name: write facts
+  include_tasks: write_facts.yaml
+
+- name: service
+  include_tasks: service.yaml
 
 ...

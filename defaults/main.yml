@@ -2,6 +2,8 @@
 
 urbanterror_admin_password: s3cr3T-are-p0ssiBL3
 
+urbanterror_version: 4.3.4
+
 urbanterror_start_map: ut4_riyadh
 urbanterror_game_type: CaptureTheFlag
 
@@ -13,7 +15,7 @@ urbanterror_binary: "Quake3-UrT-Ded.{{ ansible_machine }}"
 
 urbanterror_config:
   # intition version: 4.0.3
-  current_version: '4.0.3'
+  current_version: "{{ urbanterror_version }}"
   # id: 2 =
   download_server: '2'
   # id: 1 = Quake3-UrT (default)

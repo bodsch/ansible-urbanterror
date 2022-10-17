@@ -68,12 +68,12 @@ class UrbanterrorAPI(object):
         """
 
         """
-        return_code, data = self.__api_data()
+        return_code, data = self.download_manifest()
 
-        if(return_code == 200):
+        if return_code == 200:
             """
             """
-            if(self.get == 'api_version'):
+            if self.get == 'api_version':
                 result = self.__parse_api_version(data)
 
                 return dict(
@@ -81,7 +81,7 @@ class UrbanterrorAPI(object):
                     api_version=result
                 )
 
-            if(self.get == 'version'):
+            if self.get == 'version':
                 result = self.__parse_version(data)
 
                 return dict(
@@ -89,7 +89,7 @@ class UrbanterrorAPI(object):
                     versions=result
                 )
 
-            if(self.get == 'server_list'):
+            if self.get == 'server_list':
                 result = self.__parse_server_list(data)
 
                 return dict(
@@ -97,7 +97,7 @@ class UrbanterrorAPI(object):
                     server_list=result
                 )
 
-            if(self.get == 'engine_list'):
+            if self.get == 'engine_list':
                 result = self.__parse_engine_list(data)
 
                 return dict(
@@ -105,11 +105,9 @@ class UrbanterrorAPI(object):
                     engine_list=result
                 )
 
-        self.module.log("--------------------------------------")
-        self.module.log(
-            msg="result {} ({})".format(result, type(result))
-        )
-        self.module.log("--------------------------------------")
+        # self.module.log("--------------------------------------")
+        # self.module.log(msg=f"result {result} ({type(result)})")
+        # self.module.log("--------------------------------------")
 
         return dict(
             failed = True
@@ -129,7 +127,7 @@ class UrbanterrorAPI(object):
 
         except Exception as e:
             self.module.log(
-                msg=" text: {} ({})".format(e, type(e))
+                msg=f" text: {e} ({type(e)})"
             )
             pass
 
@@ -142,9 +140,7 @@ class UrbanterrorAPI(object):
 
         version_list = data.get('VersionList')
 
-        self.module.log(
-            msg=" - {} ({})".format(version_list, type(version_list))
-        )
+        self.module.log(msg=f" - {version_list} ({type(version_list)})")
 
         try:
             versions = json.loads(
@@ -154,7 +150,7 @@ class UrbanterrorAPI(object):
             for i in versions.get('Version'):
                 i['id'] = i.get('VersionNumber')
                 i['version'] = i.get('VersionName').split(' ')[0]
-                if(len(i.get('VersionName').split(' ')) == 2):
+                if (len(i.get('VersionName').split(' ')) == 2):
                     i['latest'] = True
                 else:
                     i['latest'] = False
@@ -165,9 +161,7 @@ class UrbanterrorAPI(object):
                     release_date=i.get('ReleaseDate')
                 )
         except Exception as e:
-            self.module.log(
-                msg=" text: {} ({})".format(e, type(e))
-            )
+            self.module.log(msg=f" text: {e} ({type(e)})")
             pass
 
         return result
@@ -191,9 +185,7 @@ class UrbanterrorAPI(object):
             )
 
         except Exception as e:
-            self.module.log(
-                msg=" text: {} ({})".format(e, type(e))
-            )
+            self.module.log(msg=f" text: {e} ({type(e)})")
             pass
 
         return result
@@ -212,7 +204,7 @@ class UrbanterrorAPI(object):
                 _engine_name = i.get('EngineName').split(' ')
                 _default_engine = False
 
-                if('default' in _engine_name[1].lower()):
+                if ('default' in _engine_name[1].lower()):
                     _default_engine = True
 
                 i['name'] = _engine_name[0].lower()
@@ -226,17 +218,16 @@ class UrbanterrorAPI(object):
                 )
 
         except Exception as e:
-            self.module.log(
-                msg=" text: {} ({})".format(e, type(e))
-            )
+            self.module.log(msg=f" text: {e} ({type(e)})")
             pass
 
         return result
 
-    def __api_data(self):
+    def download_manifest(self):
         """
         """
         updater_data = dict()
+        output_dict = dict()
 
         payload = {
             'platform': self.platform,
@@ -247,37 +238,34 @@ class UrbanterrorAPI(object):
             'server': self.server,
             'updaterVersion': self.updaterVersion
         }
+        # self.module.log(msg=f" payload: {payload}")
 
-        self.module.log(msg=" payload: {}".format(payload))
+        code, ret = self.__call_url(data=payload)
 
-        code, ret = self.__call_url(
-            data=payload
-        )
-
-        if(code == 200 and len(ret) != 0):
+        if code == 200 and len(ret) != 0:
             import xmltodict
-            # obj = untangle.parse(XML)
-            obj = xmltodict.parse(
-                ret
-            )
-
+            obj = xmltodict.parse(ret)
             updater_data = obj['Updater']
+            # convert an OrderedDict to an regular dict
+            output_dict = json.loads(json.dumps(updater_data))
 
-        return code, updater_data
+        # self.module.log(msg=f"{type(output_dict)}")
+        # self.module.log(msg=f"{json.dumps(output_dict, indent=2, sort_keys=True)}")
+
+        return code, output_dict
 
     def __call_url(self, method='POST', data=None):
         """
         """
-
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
 
-        self.module.log(msg=" data   : {}".format(data))
-        self.module.log(msg=" headers: {}".format(headers))
+        # self.module.log(msg=" data   : {}".format(data))
+        # self.module.log(msg=" headers: {}".format(headers))
 
         try:
-            if(method == 'POST'):
+            if method == 'POST':
                 ret = requests.post(
                     self.url,
                     data=data,
@@ -290,11 +278,11 @@ class UrbanterrorAPI(object):
 
             ret.raise_for_status()
 
-            self.module.log(msg="------------------------------------------------------------------")
-            # self.module.log(msg=" text    : {}".format(ret.text))
-            self.module.log(msg=" headers : {}".format(ret.headers))
-            self.module.log(msg=" code    : {}".format(ret.status_code))
-            self.module.log(msg="------------------------------------------------------------------")
+            # self.module.log(msg="------------------------------------------------------------------")
+            # # self.module.log(msg=" text    : {}".format(ret.text))
+            # self.module.log(msg=" headers : {}".format(ret.headers))
+            # self.module.log(msg=" code    : {}".format(ret.status_code))
+            # self.module.log(msg="------------------------------------------------------------------")
 
             return ret.status_code, ret.text
 
@@ -312,20 +300,40 @@ def main():
     """
     module = AnsibleModule(
         argument_spec=dict(
-            url=dict(required=True),
-            get=dict(required=True),
-            engine=dict(required=False),
-            server=dict(required=False),
-            updaterVersion=dict(required=False),
-            version=dict(required=False),
-            platform=dict(required=False, default='Linux64'),
-            query=dict(required=False, default='versionInfo'),
+            url=dict(
+                required=True
+            ),
+            get=dict(
+                required=True
+            ),
+            engine=dict(
+                required=False
+            ),
+            server=dict(
+                required=False
+            ),
+            updaterVersion=dict(
+                required=False
+            ),
+            version=dict(
+                required=False
+            ),
+            platform=dict(
+                required=False,
+                default='Linux64'
+            ),
+            query=dict(
+                required=False,
+                default='versionInfo'
+            ),
         ),
         supports_check_mode=False,
     )
 
     api = UrbanterrorAPI(module)
     result = api.run()
+
+    module.log(msg=f"= result : {result}")
 
     module.exit_json(**result)
 

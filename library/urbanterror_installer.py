@@ -70,19 +70,23 @@ class UrbanterrorInstaller(object):
         """
 
         """
-        return_code, data = self.__api_data()
+        return_code, data = self.download_manifest()
 
-        if(return_code == 200):
+        if return_code == 200:
             """
             """
-            server_list = self.__parse_server_list(data)
+            server_list = self.__parse_serverlist_section(data)
 
             self.download_server = server_list.get('url')
 
-            result = self.__parse_files(data)
+            result_data = self.__parse_files_section(data, 0)
+            result_engine = self.__parse_files_section(data, 1)
+
+            result = result_engine + result_data
+
             count_full = len(result)
 
-            file_list = self.__check_data(result)
+            file_list = self.verify_data_integrity(result)
             count_download = len(file_list)
 
             if count_download > 0:
@@ -92,26 +96,26 @@ class UrbanterrorInstaller(object):
                     return dict(
                         changed=True,
                         failed=False,
-                        msg="{0} files available, {1} downloaded".format(count_full, count_download)
+                        msg=f"{count_full} files available, {count_download} new downloaded."
                     )
                 else:
                     return dict(
                         changed=True,
                         failed=True,
-                        msg="{0} files should be available, but not all can be downloaded".format(count_full)
+                        msg=f"{count_full} files should be available, but not all can be downloaded."
                     )
 
-                file_list = self.__check_data(result)
+                file_list = self.verify_data_integrity(result)
             else:
                 return dict(
                     changed=False,
                     failed=False,
-                    msg="{0} files up-to-date".format(count_full)
+                    msg=f"{count_full} files up-to-date."
                 )
 
         return dict(
             failed = True,
-            msg="no API data available"
+            msg="no manifest data available"
         )
 
     def md5(self, fname):
@@ -121,30 +125,39 @@ class UrbanterrorInstaller(object):
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()
 
-    def __check_data(self, data):
+    def verify_data_integrity(self, data):
         """
         """
         need_download = []
 
         for f in data:
-            directory = f.get('FileDir')
-            # url = f.get('FileUrl')[-1:][0]
+            # self.module.log(msg="------------------------------------------------------------------")
+            # self.module.log(msg=f"           {f}")
+            directory = f.get('FileDir', "")
+            # file_url = f.get('FileUrl')
             file_name = f.get('FileName')
             file_size = f.get('FileSize')
             checksum = f.get('FileMD5')
+            # self.module.log(msg=f" directory : {directory}")
+            # self.module.log(msg=f" file_name : {file_name}")
+            # self.module.log(msg=f" file_size : {file_size}")
+            # self.module.log(msg=f" file_url  : {file_url}")
+            # self.module.log(msg=f" checksum  : {checksum}")
+            # self.module.log(msg="------------------------------------------------------------------")
 
-            dest_file = os.path.join(self.destination, directory, file_name)
+            if directory:
+                dest_file = os.path.join(self.destination, directory, file_name)
+            else:
+                dest_file = os.path.join(self.destination, file_name)
+
+            # self.module.log(msg=f" dest_file : {dest_file}")
 
             _size, _checksum = self.__file_info(dest_file)
 
             if int(_size) == int(file_size) and _checksum == checksum:
-                self.module.log(
-                    msg="  - {0} - file okay".format(dest_file)
-                )
+                self.module.log(msg=f"  - {dest_file} - file size and checksum okay")
             else:
-                self.module.log(
-                    msg="  - {0} - missmatch ...".format(dest_file)
-                )
+                self.module.log(msg=f"  - {dest_file} - file size or checksum missmatch ...")
                 need_download.append(f)
 
         return need_download
@@ -152,41 +165,55 @@ class UrbanterrorInstaller(object):
     def __download(self, data):
         """
         """
-        self.module.log("download files")
-
         should_counter = 0
         is_counter = len(data)
 
         for f in data:
+            # self.module.log(msg="------------------------------------------------------------------")
+            # self.module.log(msg=f"           {f}")
+
             directory = f.get('FileDir')
-            url = f.get('FileUrl')[-1:][0]
+            file_url = f.get('FileUrl')
             file_name = f.get('FileName')
             file_size = f.get('FileSize')
             checksum = f.get('FileMD5')
 
+            # self.module.log(msg=f" directory : {directory}")
+            # self.module.log(msg=f" file_name : {file_name}")
+            # self.module.log(msg=f" file_size : {file_size}")
+            # self.module.log(msg=f" file_url  : {file_url}")
+            # self.module.log(msg=f" checksum  : {checksum}")
+            # self.module.log(msg="------------------------------------------------------------------")
+
             # self.module.log(
-            #     msg="  - {} : {} : {}".format(file_name, file_size, checksum)
+            #     msg=f"  - {file_name} : {file_size} : {checksum}"
             # )
 
-            try:
-                # Create target Directory
-                os.mkdir(os.path.join(self.destination, directory))
-            except FileExistsError:
-                pass
+            if isinstance(file_url, list):
+                file_url = file_url[-1:][0]
 
-            dest_file = os.path.join(self.destination, directory, file_name)
+            # Create target Directory
+            if directory:
+                try:
+                    os.mkdir(os.path.join(self.destination, directory))
+                except FileExistsError:
+                    pass
+
+                dest_file = os.path.join(self.destination, directory, file_name)
+            else:
+                dest_file = os.path.join(self.destination, file_name)
+
+            # self.module.log(msg=f"  dest_file  : {dest_file}")
 
             with open(dest_file, "wb") as file:
-                response = requests.get("{}/{}".format(self.download_server, url))
+                response = requests.get(f"{self.download_server}/{file_url}")
                 file.write(response.content)
                 file.close()
 
             _size, _checksum = self.__file_info(dest_file)
 
             if int(_size) == int(file_size) and _checksum == checksum:
-                self.module.log(
-                    msg="  -> successful"
-                )
+                self.module.log(msg=f"  - {dest_file} - successfully downloaded")
 
                 should_counter = should_counter + 1
 
@@ -202,11 +229,11 @@ class UrbanterrorInstaller(object):
 
         return _size, _checksum
 
-    def __parse_files(self, data):
+    def __parse_files_section(self, data, index=0):
         """
         """
         # result = {}
-        files = data.get('Files')[0].get('File')
+        files = data.get('Files')[int(index)].get('File')
 
         try:
             _list = json.loads(
@@ -215,13 +242,13 @@ class UrbanterrorInstaller(object):
 
         except Exception as e:
             self.module.log(
-                msg=" exception: {} ({})".format(e, type(e))
+                msg=f" exception: {e} ({type(e)})"
             )
             pass
 
         return _list
 
-    def __parse_server_list(self, data):
+    def __parse_serverlist_section(self, data):
         """
         """
         result = {}
@@ -247,10 +274,11 @@ class UrbanterrorInstaller(object):
 
         return result
 
-    def __api_data(self):
+    def download_manifest(self):
         """
         """
         updater_data = dict()
+        output_dict = dict()
 
         payload = {
             'platform': self.platform,
@@ -261,53 +289,47 @@ class UrbanterrorInstaller(object):
             'server': self.server,
             'updaterVersion': self.updaterVersion
         }
+        # self.module.log(msg=f" payload: {payload}")
 
-        self.module.log(msg=" payload: {}".format(payload))
+        code, ret = self.__call_url(data=payload)
 
-        code, ret = self.__call_url(
-            data=payload
-        )
-
-        if(code == 200 and len(ret) != 0):
+        if code == 200 and len(ret) != 0:
             import xmltodict
-            # obj = untangle.parse(XML)
-            obj = xmltodict.parse(
-                ret
-            )
+            obj = xmltodict.parse(ret)
             updater_data = obj['Updater']
+            # convert an OrderedDict to an regular dict
+            output_dict = json.loads(json.dumps(updater_data))
 
-        return code, updater_data
+        # self.module.log(msg=f"{type(output_dict)}")
+        # self.module.log(msg=f"{json.dumps(output_dict, indent=2, sort_keys=True)}")
+
+        return code, output_dict
 
     def __call_url(self, method='POST', data=None):
         """
         """
-
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
 
-        self.module.log(msg=" data   : {}".format(data))
-        self.module.log(msg=" headers: {}".format(headers))
-
         try:
-            if(method == 'POST'):
+            if method == 'POST':
                 ret = requests.post(
                     self.url,
                     data=data,
                     headers=headers,
                     verify=False
                 )
-
             else:
                 print("unsupported")
 
             ret.raise_for_status()
 
-            self.module.log(msg="------------------------------------------------------------------")
-            # self.module.log(msg=" text    : {}".format(ret.text))
-            self.module.log(msg=" headers : {}".format(ret.headers))
-            self.module.log(msg=" code    : {}".format(ret.status_code))
-            self.module.log(msg="------------------------------------------------------------------")
+            # self.module.log(msg="------------------------------------------------------------------")
+            # #self.module.log(msg=f" text    : {ret.text}")
+            # self.module.log(msg=f" headers : {ret.headers}")
+            # self.module.log(msg=f" code    : {ret.status_code}")
+            # self.module.log(msg="------------------------------------------------------------------")
 
             return ret.status_code, ret.text
 
@@ -340,6 +362,8 @@ def main():
 
     api = UrbanterrorInstaller(module)
     result = api.run()
+
+    module.log(msg=f"= result : {result}")
 
     module.exit_json(**result)
 

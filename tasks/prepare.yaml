@@ -38,16 +38,15 @@
     dest: "{{ urbanterror_directory }}/updater.sh"
     mode: 0750
 
-- name: urbanterror api
+- name: get urbanterror engine list
   urbanterror_api:
     url: "http://www.urbanterror.info/api/updaterv4/"
     get: engine_list
     platform: Linux64
-    updaterVersion: '4.0.3'
-    # query: 'versionInfo'
+    updaterVersion: "{{ urbanterror_version }}"
   register: version_info
 
-- name: info
+- name: engine list
   debug:
     msg:
       - "{{ version_info }}"

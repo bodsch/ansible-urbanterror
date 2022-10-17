@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-set -e
+set -x
+# set -e
 
-#while true
-#do
+urbanterror_bin={{ urbanterror_directory }}/{{ urbanterror_binary }}
+
+
+if [ -n "${urbanterror_bin}" ] && [ -f "${urbanterror_bin}" ]
+then
   {{ urbanterror_directory }}/{{ urbanterror_binary }} \
     +set fs_game q3ut4 \
     +set fs_basepath {{ urbanterror_directory }} \
@@ -13,6 +17,10 @@ set -e
     +set net_port {{ urbanterror_bind_port }} \
     +set com_hunkmegs 128 \
     +exec server.cfg > {{ urbanterror_directory }}/server.out 2>&1
+else
+  echo "ERROR: missing binary ${urbanterror_bin}"
+  exit 2
+fi
 
 #  echo "server crashed on `date`" > {{ urbanterror_directory }}/last_crash.txt
 # done

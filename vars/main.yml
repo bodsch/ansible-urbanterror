@@ -9,6 +9,9 @@ urbanterror_dependencies:
   - python3-urllib3
   - python3-requests
   - python3-xmltodict
+  #
+  - libsdl1.2debian
+  - libxxf86vm1
 
 urbanterror_server_config: "{{ urbanterror_install_path }}/q3ut4/server.cfg"
 

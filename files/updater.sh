@@ -258,7 +258,7 @@ function doBrowser ()
         $BROWSER "$TMPFILE"
     fi
 
-    rm -f "$TMPFILE"
+    # rm -f "$TMPFILE"
 }
 
 function drawLicence ()
