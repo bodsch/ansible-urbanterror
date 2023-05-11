@@ -45,9 +45,18 @@
 - name: create systemd unit file
   template:
     src: urbanterror.service.j2
-    dest: /etc/systemd/system/urbanterror.service
+    dest: "{{ systemd_lib_directory }}/urbanterror.service"
     mode: 0644
   notify:
     - reload systemd
+
+- name: create custom fact file
+  bodsch.core.facts:
+    name: urbanterror
+    facts:
+      current_version: "{{ urbanterror_config.current_version }}"
+      download_server: "{{ urbanterror_config.download_server }}"
+      game_engine: "{{ urbanterror_config.game_engine }}"
+      ask_before_update: "{{ urbanterror_config.ask_before_updating }}"
 
 ...

@@ -29,4 +29,8 @@ urbanterror_game_type_map:
   FreezeTag: 10
   GunGame: 11
 
+# ----------------------------------------------------------------------------------------
+
+systemd_lib_directory: /lib/systemd/system
+
 ...

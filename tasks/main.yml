@@ -9,9 +9,6 @@
 - name: configure
   include_tasks: configure.yaml
 
-- name: write facts
-  include_tasks: write_facts.yaml
-
 - name: service
   include_tasks: service.yaml
 

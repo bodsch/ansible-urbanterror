@@ -1,6 +1,5 @@
 ---
+
 skip_list:
-  - fqcn[action-core]            # Use FQCN for builtin module actions
-  - fqcn[action]                 # Use FQCN for module actions, such `<namespace>.<collection>.docker_container`. (warning)
-  - name[casing]                 # All names should start with an uppercase letter. (warning)
-  - name[template]               # Jinja templates should only be at the end of 'name'
+  - name[casing]
+  - name[template]
