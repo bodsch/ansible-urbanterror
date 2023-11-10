@@ -16,6 +16,7 @@ galaxy_info:
         - buster
         # 11
         - bullseye
+        - bookworm
     - name: Ubuntu
       versions:
         # 20.04
