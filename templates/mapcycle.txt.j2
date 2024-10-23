@@ -1,11 +1,12 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 {{ urbanterror_start_map }}
 {% if urbanterror_maps is defined %}
-{% for map in urbanterror_maps %}
+  {% for map in urbanterror_maps %}
 {{ map }}
-{% endfor %}
+  {% endfor %}
 {% endif %}
 {% if urbanterror_custom_maps is defined %}
-{% for k in urbanterror_custom_maps %}
+  {% for k in urbanterror_custom_maps %}
 {{ k.name }}
-{% endfor %}
+  {% endfor %}
 {% endif %}

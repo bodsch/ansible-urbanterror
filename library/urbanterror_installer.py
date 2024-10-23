@@ -309,6 +309,7 @@ class UrbanterrorInstaller(object):
         """
         """
         headers = {
+            'User-Agent': 'curl/8.10.1',
             'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
 
@@ -323,13 +324,13 @@ class UrbanterrorInstaller(object):
             else:
                 print("unsupported")
 
-            ret.raise_for_status()
-
             # self.module.log(msg="------------------------------------------------------------------")
             # #self.module.log(msg=f" text    : {ret.text}")
             # self.module.log(msg=f" headers : {ret.headers}")
             # self.module.log(msg=f" code    : {ret.status_code}")
             # self.module.log(msg="------------------------------------------------------------------")
+
+            ret.raise_for_status()
 
             return ret.status_code, ret.text
 

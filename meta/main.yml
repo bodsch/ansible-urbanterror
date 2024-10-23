@@ -2,6 +2,7 @@
 
 galaxy_info:
   role_name: urbanterror
+  namespace: bodsch
 
   author: Bodo Schulz
   description: urbanterror

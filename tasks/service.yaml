@@ -1,7 +1,7 @@
 ---
 
 - name: ensure services are started
-  service:
+  ansible.builtin.service:
     name: urbanterror
     state: started
     enabled: true

@@ -1,15 +1,15 @@
 ---
 
 - name: create server config
-  template:
+  ansible.builtin.template:
     src: server.cfg.j2
     dest: "{{ urbanterror_directory }}/q3ut4/server.cfg"
-    mode: 0660
+    mode: "0660"
 
 - name: create mapcycle
-  template:
+  ansible.builtin.template:
     src: mapcycle.txt.j2
     dest: "{{ urbanterror_directory }}/q3ut4/mapcycle.txt"
-    mode: 0660
+    mode: "0660"
 
 ...
